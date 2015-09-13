@@ -13,7 +13,7 @@
 
 (setq inhibit-splash-screen t)
 
-;(load-theme 'leuven)
+(load-theme 'aurora t)
 
 (setq cider-repl-use-clojure-font-lock t)
 
@@ -36,4 +36,4 @@
 ;(setq ns-function-modifier 'control)
 
 (load "~/.emacs.d/web-mode-setup")
-;(load "~/.emacs.d/rainbow-setup")
+(load "~/.emacs.d/rainbow-setup")
