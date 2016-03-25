@@ -14,16 +14,10 @@
 (setq make-backup-files nil)
 
 (defvar my-packages '(better-defaults
-                      exec-path-from-shell
-                      projectile
+                      use-package
+                      exec-path-from-shell 
                       clojure-mode
-                      racket-mode
-                      cider
-                      company
-                      rainbow-delimiters
-                      web-mode
-                      aurora-theme
-                      moe-theme))
+                      project-explorer))
 
 (defun prelude-packages-installed-p ()
   (loop for p in my-packages

@@ -4,3 +4,8 @@ elpa
 places
 games
 auto-save-list
+smex-items
+eshell
+project-explorer-cache/
+projectile-bookmarks.eld
+vendor/
