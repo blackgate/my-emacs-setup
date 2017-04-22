@@ -1,3 +1,10 @@
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (load "~/.emacs.d/packages-setup")
 
 (require 'use-package)
@@ -13,9 +20,9 @@
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
 
-(setq-default line-spacing 4)
+(setq-default line-spacing 3)
 
-(set-default-font "Input Mono 13")
+(set-default-font "Menlo 13")
 
 (when window-system (set-frame-size (selected-frame) 120 40))
 
@@ -85,3 +92,13 @@
   :init
   (load-theme 'atom-one-dark t)
   (set-face-attribute 'linum nil :foreground "#777"))
+
+;(use-package all-the-icons
+;  :ensure t
+;  :init
+;  (all-the-icons-install-fonts t))
+
+(use-package neotree
+  :ensure t
+  :init
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))

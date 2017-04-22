@@ -29,3 +29,9 @@
   (dolist (p my-packages)
     (unless (package-installed-p p)
       (package-install p))))
+
+(unless (package-installed-p 'all-the-icons)
+  (package-install 'all-the-icons)
+  (all-the-icons-install-fonts t))
+  
+    
