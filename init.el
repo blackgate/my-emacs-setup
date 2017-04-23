@@ -101,4 +101,17 @@
 (use-package neotree
   :ensure t
   :init
-  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+  (global-set-key [f8] 'neotree-toggle))
+
+(use-package helm
+  :ensure t
+  :bind
+  (("M-x" . helm-M-x)
+   ("C-x b" . helm-buffers-list)
+   ("C-x C-f" . helm-find-files)))
+
+(use-package magit
+  :ensure t
+  :bind
+  (("C-c m" . magit-status)))

@@ -9,3 +9,5 @@ eshell
 project-explorer-cache/
 projectile-bookmarks.eld
 vendor/
+/.DS_Store
+/network-security.data
