@@ -25,7 +25,11 @@
 
 (setq-default line-spacing 3)
 
-(set-default-font "Menlo 13")
+(if (eq system-type 'darwin)
+    (set-default-font "Menlo 13"))
+
+(if (eq system-type 'windows-nt)
+    (set-default-font "Consolas 13"))
 
 (when window-system (set-frame-size (selected-frame) 120 40))
 
