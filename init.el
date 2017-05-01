@@ -20,6 +20,9 @@
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
 
+(unless (eq system-type 'darwin)
+  (cua-mode t))
+
 (setq-default line-spacing 3)
 
 (set-default-font "Menlo 13")
@@ -102,7 +105,9 @@
   :ensure t
   :init
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
-  (global-set-key [f8] 'neotree-toggle))
+  (global-set-key [f8] 'neotree-toggle)
+  (setq neo-smart-open t)
+  (setq projectile-switch-project-action 'neotree-projectile-action))
 
 (use-package helm
   :ensure t
