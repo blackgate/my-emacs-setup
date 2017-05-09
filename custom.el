@@ -19,7 +19,7 @@
  '(foreground-color "#cccccc")
  '(package-selected-packages
    (quote
-    (magit helm-config helm all-the-icons neotree project-explorer clojure-mode exec-path-from-shell use-package better-defaults)))
+    (nlinum magit helm-config helm all-the-icons neotree project-explorer clojure-mode exec-path-from-shell use-package better-defaults)))
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
    (quote

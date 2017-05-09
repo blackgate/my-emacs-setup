@@ -39,12 +39,6 @@
 
 (setq org-src-fontify-natively t)
 
-;(setq org-ditaa-jar-path "~/.emacs.d/vendor/ditaa0_9.jar")
-
-;(org-babel-do-load-languages
-; 'org-babel-load-languages
-; '((ditaa . t)))
-
 (setq visible-bell nil)
 (setq ring-bell-function 'ignore)
 
@@ -54,10 +48,6 @@
 (setq mouse-wheel-scroll-amount '(2 ((shift) . 1))) ;; two lines at a time
 (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
 (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-
-(add-hook 'prog-mode-hook 'linum-mode)
-
-(setq linum-format "%4d ")
 
 (prefer-coding-system 'utf-8)
 
@@ -100,11 +90,6 @@
   (load-theme 'atom-one-dark t)
   (set-face-attribute 'linum nil :foreground "#777"))
 
-;(use-package all-the-icons
-;  :ensure t
-;  :init
-;  (all-the-icons-install-fonts t))
-
 (use-package neotree
   :ensure t
   :init
@@ -124,3 +109,9 @@
   :ensure t
   :bind
   (("C-c m" . magit-status)))
+
+(use-package nlinum
+  :ensure t
+  :init
+  (add-hook 'prog-mode-hook 'nlinum-mode)
+  (setq nlinum-format "%4d "))
