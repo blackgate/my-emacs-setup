@@ -1,4 +1,3 @@
-
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
@@ -9,6 +8,11 @@
 
 (require 'use-package)
 (require 'linum)
+(require 'cl)
+
+(defun font-candidate (&rest fonts)
+  "Return existing font which first match."
+  (find-if (lambda (f) (find-font (font-spec :name f))) fonts))
 
 (setq custom-file "~/.emacs.d/custom.el")
 
@@ -21,15 +25,13 @@
   (exec-path-from-shell-initialize))
 
 (unless (eq system-type 'darwin)
-  (cua-mode t))
+  (cua-mode t)
+  (global-set-key (kbd "C-f") 'isearch-forward)
+  (global-set-key (kbd "C-s") 'save-buffer))
 
 (setq-default line-spacing 3)
 
-(if (eq system-type 'darwin)
-    (set-default-font "Menlo 13"))
-
-(if (eq system-type 'windows-nt)
-    (set-default-font "Consolas 13"))
+(set-default-font (font-candidate '"SF Mono 14" "Consolas 13"))
 
 (when window-system (set-frame-size (selected-frame) 120 40))
 
@@ -51,6 +53,9 @@
 
 (prefer-coding-system 'utf-8)
 
+(setq cursor-in-non-selected-windows nil)
+(setq-default cursor-in-non-selected-windows nil)
+
 ;; Packages
 
 (use-package company
@@ -68,12 +73,6 @@
   :init
   (load "~/.emacs.d/web-mode-setup"))
 
-(use-package smex
-  :ensure t
-  :init
-  (smex-initialize)
-  :bind ("M-x" . smex))
-
 (use-package ido-vertical-mode
   :ensure t
   :init
@@ -82,7 +81,7 @@
 (use-package projectile
   :ensure t
   :init
-  (projectile-global-mode));
+  (projectile-global-mode))
 
 (use-package atom-one-dark-theme
   :ensure t
@@ -90,13 +89,31 @@
   (load-theme 'atom-one-dark t)
   (set-face-attribute 'linum nil :foreground "#777"))
 
+(use-package all-the-icons
+  :config
+  (add-to-list
+   'all-the-icons-dir-icon-alist
+   '("google[ _-]drive" all-the-icons-alltheicon "google-drive" :height 0.9 :v-adjust -0.1)))
+
 (use-package neotree
   :ensure t
   :init
-  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+  (setq neo-theme (if (display-graphic-p) 'icons 'ascii))
   (global-set-key [f8] 'neotree-toggle)
   (setq neo-smart-open t)
-  (setq projectile-switch-project-action 'neotree-projectile-action))
+  (setq projectile-switch-project-action 'neotree-projectile-action)
+  (setq neo-show-updir-line nil)
+  (setq neo-cwd-line-style 'button)
+  :config
+  (let ((faces '(neo-button-face
+                 neo-dir-link-face
+                 neo-file-link-face
+                 neo-header-face
+                 neo-expand-btn-face
+                 neo-banner-face
+                 neo-root-dir-face)))
+    (dolist (f faces)
+      (set-face-attribute f nil :font (font-candidate "Helvetica Neue 13" "Segoe UI 12")))))
 
 (use-package helm
   :ensure t
