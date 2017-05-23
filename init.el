@@ -27,11 +27,12 @@
 (unless (eq system-type 'darwin)
   (cua-mode t)
   (global-set-key (kbd "C-f") 'isearch-forward)
-  (global-set-key (kbd "C-s") 'save-buffer))
+  (global-set-key (kbd "C-s") 'save-buffer)
+  (define-key isearch-mode-map "\C-f" 'isearch-repeat-forward))
 
 (setq-default line-spacing 3)
 
-(set-default-font (font-candidate '"SF Mono 14" "Consolas 13"))
+(set-default-font (font-candidate '"SF Mono 14" "Consolas 12"))
 
 (when window-system (set-frame-size (selected-frame) 120 40))
 
@@ -113,7 +114,7 @@
                  neo-banner-face
                  neo-root-dir-face)))
     (dolist (f faces)
-      (set-face-attribute f nil :font (font-candidate "Helvetica Neue 13" "Segoe UI 12")))))
+      (set-face-attribute f nil :font (font-candidate "Helvetica Neue 13" "Segoe UI 10")))))
 
 (use-package helm
   :ensure t
