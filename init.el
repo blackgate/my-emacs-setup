@@ -7,8 +7,8 @@
 ;; FIXES COMPANY-BOX BUG WHEN IN FULLSCREEN
 ;;(setq ns-use-native-fullscreen nil)
 
-(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-(add-to-list 'default-frame-alist '(ns-appearance . dark))
+;;(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+;;(add-to-list 'default-frame-alist '(ns-appearance . dark))
 
 ;; handle emacs utf-8 input
 (set-terminal-coding-system 'utf-8)
