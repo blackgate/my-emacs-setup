@@ -14,15 +14,19 @@
 (setq auto-save-default nil)
 (setq make-backup-files nil)
 
-(setq-default line-spacing 4)
+(setq-default line-spacing 3)
 
-(set-default-font (font-candidate "Fira Code 13" "SF Mono 13" "Consolas 12"))
+(set-default-font (font-candidate "SF Mono 13" "Fira Code 13" "Consolas 12"))
 
 (setq inhibit-splash-screen t)
 
 (menu-bar-mode t)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
+
+(global-hl-line-mode 1)
+
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
 (when window-system (set-frame-size (selected-frame) 120 40))
 

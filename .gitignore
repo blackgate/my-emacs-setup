@@ -6,9 +6,11 @@ games
 auto-save-list
 smex-items
 eshell
+recentf
 project-explorer-cache/
 projectile-bookmarks.eld
 vendor/
 url/
+.cache/
 /.DS_Store
 /network-security.data

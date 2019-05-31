@@ -1,6 +1,5 @@
 (require 'package)
 (require 'cl)
-(require 'linum)
 
 (setq package-archives
       '(("GNU ELPA"     . "http://elpa.gnu.org/packages/")
@@ -34,39 +33,15 @@
   (package-install 'all-the-icons)
   (all-the-icons-install-fonts t))
 
+(require 'clojure-mode)
+(put-clojure-indent 'fn-traced :defn)
+
 (require 'use-package)
 
-(use-package company
+(use-package clj-refactor
   :ensure t
   :init
-  (add-hook 'after-init-hook 'global-company-mode))
-
-(use-package cider
-  :ensure t
-  :init
-  (setq cider-repl-use-clojure-font-lock t)
-  (setq cider-repl-use-pretty-printing t)
-  (setq cider-font-lock-dynamically '(macro core function var)))
-
-(use-package web-mode
-  :ensure t
-  :init
-  (load "~/.emacs.d/web-mode-setup"))
-
-(use-package ido-vertical-mode
-  :ensure t
-  :init
-  (ido-vertical-mode 1))
-
-(use-package projectile
-  :ensure t
-  :init
-  (projectile-global-mode))
-
-(use-package zenburn-theme
-  :ensure t
-  :init
-  (load-theme 'zenburn t))
+  (add-hook 'clojure-mode-hook 'clj-refactor-mode))
 
 (use-package all-the-icons
   :config
@@ -74,54 +49,85 @@
    'all-the-icons-dir-icon-alist
    '("google[ _-]drive" all-the-icons-alltheicon "google-drive" :height 0.9 :v-adjust -0.1)))
 
-(use-package neotree
+(use-package company
   :ensure t
   :init
-  (setq neo-theme (if (display-graphic-p) 'icons 'ascii))
-  (global-set-key [f8] 'neotree-toggle)
-  (setq neo-smart-open t)
-  (setq projectile-switch-project-action 'neotree-projectile-action)
-  (setq neo-show-updir-line nil)
-  (setq neo-cwd-line-style 'button)
+  (add-hook 'after-init-hook 'global-company-mode)
   :config
-  (let ((faces '(neo-button-face
-                 neo-dir-link-face
-                 neo-file-link-face
-                 neo-header-face
-                 neo-expand-btn-face
-                 neo-banner-face
-                 neo-root-dir-face)))
-    (dolist (f faces)
-      (set-face-attribute f nil :font (font-candidate "Helvetica Neue 13" "Segoe UI 10")))))
+  (setq company-tooltip-align-annotations t ; aligns annotation to the right
+        company-tooltip-limit 12            ; bigger popup window
+        company-idle-delay .2               ; decrease delay before autocompletion popup shows
+        company-echo-delay 0                ; remove annoying blinking
+        company-minimum-prefix-length 2
+        company-require-match nil
+        company-dabbrev-ignore-case nil
+        company-dabbrev-downcase nil))
+
+(use-package cider
+  :ensure t
+  :init
+  (setq cider-repl-use-clojure-font-lock t)
+  (setq cider-repl-use-pretty-printing t)
+  (setq cider-font-lock-dynamically '(macro core function var))
+  (add-hook 'cider-mode-hook #'eldoc-mode))  
+
+(use-package web-mode
+  :ensure t
+  :init
+  (load "~/.emacs.d/web-mode-setup"))
+
+(use-package projectile
+  :ensure t
+  :init
+  (projectile-global-mode))
 
 (use-package helm
   :ensure t
   :bind
   (("M-x" . helm-M-x)
-   ("C-x b" . helm-buffers-list)
-   ("C-x C-f" . helm-find-files)))
+   ("C-x b" . helm-mini)
+   ("C-x C-f" . helm-find-files))
+  :init
+  (helm-mode 1))
 
 (use-package magit
   :ensure t
   :bind
   (("C-c m" . magit-status)))
 
-(use-package nlinum
-  :ensure t
-  :init
-  (add-hook 'prog-mode-hook 'nlinum-mode)
-  (setq nlinum-format "%4d "))
-
-(use-package helm-dash
-  :ensure t
-  :config
-  (setq helm-dash-browser-func 'eww))
-
 (use-package rainbow-delimiters
   :ensure t
   :init
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
   :config
-  (setq rainbow-delimiters-max-face-count 1)
-  (set-face-foreground 'rainbow-delimiters-unmatched-face "red")
-  (set-face-foreground 'rainbow-delimiters-depth-1-face "#999999"))
+  (setq rainbow-delimiters-max-face-count 1))
+
+(use-package treemacs
+  :ensure t
+  :init
+  (setq treemacs-width 30))
+
+(use-package treemacs-projectile
+  :after treemacs projectile
+  :ensure t)
+
+(use-package treemacs-magit
+  :after treemacs magit
+  :ensure t)
+
+(use-package doom-themes
+  :ensure t
+  :init
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t)
+  (load-theme 'doom-one t)
+  (doom-themes-treemacs-config))
+
+(use-package doom-modeline
+  :ensure t
+  :hook (after-init . doom-modeline-mode)
+  :init
+  (setq doom-modeline-major-mode-color-icon t)
+  (setq doom-modeline-github t))
+
+(treemacs)
