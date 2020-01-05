@@ -14,3 +14,4 @@ url/
 .cache/
 /.DS_Store
 /network-security.data
+/transient

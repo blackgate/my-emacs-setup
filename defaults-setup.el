@@ -10,13 +10,19 @@
   (global-set-key (kbd "C-s") 'save-buffer)
   (define-key isearch-mode-map "\C-f" 'isearch-repeat-forward))
 
+(global-set-key (kbd "<home>") 'beginning-of-line)
+(global-set-key (kbd "<end>") 'end-of-line)
+
 ;; disable auto-save and auto-backup
 (setq auto-save-default nil)
 (setq make-backup-files nil)
 
 (setq-default line-spacing 3)
 
-(set-default-font (font-candidate "SF Mono 13" "Fira Code 13" "Consolas 12"))
+(let ((f (font-candidate "SF Mono 13" "Fira Code 13" "Consolas 12")))
+  (add-to-list 'default-frame-alist `(font . ,f))
+  (set-face-attribute 'default t :font f))
+;;(set-default-font (font-candidate "SF Mono 13" "Fira Code 13" "Consolas 12"))
 
 (setq inhibit-splash-screen t)
 
@@ -26,11 +32,11 @@
 
 (global-hl-line-mode 1)
 
+(show-paren-mode)
+
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
 (when window-system (set-frame-size (selected-frame) 120 40))
-
-(setq org-src-fontify-natively t)
 
 (setq visible-bell nil)
 (setq ring-bell-function 'ignore)
@@ -47,7 +53,5 @@
 (setq cursor-in-non-selected-windows nil)
 (setq-default cursor-in-non-selected-windows nil)
 
-;; FIXES PROJECTILE BUG
-(setq projectile-mode-line
-      '(:eval (format " Projectile[%s]"
-		      (projectile-project-name))))
+;; replace buffer-menu with ibuffer
+(global-set-key (kbd "C-x C-b") #'ibuffer)

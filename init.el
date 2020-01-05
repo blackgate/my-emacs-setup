@@ -1,3 +1,5 @@
+(require 'cl-lib)
+
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
@@ -15,6 +17,10 @@
 (set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 (setenv "LANG" "en_US.UTF-8")
+
+;; reduce the frequency of garbage collection by making it happen on
+;; each 50MB of allocated data (the default is on every 0.76MB)
+(setq gc-cons-threshold 50000000)
 
 (defun isolate-kill-ring()
   "Isolate Emacs kill ring from OS X system pasteboard.
@@ -57,7 +63,7 @@ This function is only necessary in window system."
 
 (defun font-candidate (&rest fonts)
   "Return existing font which first match."
-  (find-if (lambda (f) (find-font (font-spec :name f))) fonts))
+  (cl-find-if (lambda (f) (find-font (font-spec :name f))) fonts))
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
