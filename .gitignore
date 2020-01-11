@@ -1,3 +1,4 @@
+custom.el
 backups
 ido.last
 elpa
@@ -15,3 +16,4 @@ url/
 /.DS_Store
 /network-security.data
 /transient
+/url

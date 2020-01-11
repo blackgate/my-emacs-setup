@@ -1,42 +1,10 @@
-(require 'package)
-(require 'cl-lib)
-
-(setq package-archives
-      '(("GNU ELPA"     . "http://elpa.gnu.org/packages/")
-        ("MELPA Stable" . "https://stable.melpa.org/packages/")
-        ("MELPA"        . "https://melpa.org/packages/")
-	("org"          . "http://orgmode.org/elpa/"))
-      package-archive-priorities
-      '(("MELPA Stable" . 10)
-        ("GNU ELPA"     . 5)
-        ("MELPA"        . 11)
-	("org"          . 1)))
-
-(package-initialize)
-
-(defvar my-packages '(better-defaults
-                      use-package
-                      exec-path-from-shell
-                      project-explorer))
-
-(defun prelude-packages-installed-p ()
-  (cl-loop for p in my-packages
-        when (not (package-installed-p p)) do (cl-return nil)
-        finally (cl-return t)))
-
-(unless (prelude-packages-installed-p)
-  (package-refresh-contents)
-  (dolist (p my-packages)
-    (unless (package-installed-p p)
-      (package-install p))))
-
-(unless (package-installed-p 'all-the-icons)
-  (package-install 'all-the-icons)
-  (all-the-icons-install-fonts t))
-
+;;; packages-setup.el --- Packages Setup
+;;; Commentary:
+;;; Code:
 (require 'use-package)
 
 (use-package clojure-mode
+  :ensure t
   :config
   (put-clojure-indent 'fn-traced :defn))
 
@@ -44,12 +12,6 @@
   :ensure t
   :init
   (add-hook 'clojure-mode-hook 'clj-refactor-mode))
-
-(use-package all-the-icons
-  :config
-  (add-to-list
-   'all-the-icons-dir-icon-alist
-   '("google[ _-]drive" all-the-icons-alltheicon "google-drive" :height 0.9 :v-adjust -0.1)))
 
 (use-package company
   :ensure t
@@ -82,11 +44,7 @@
   :init
   (setq projectile-completion-system 'ivy)
   :config
-  (projectile-global-mode)
-  ;; FIXES PROJECTILE BUG
-  (setq projectile-mode-line
-	'(:eval (format " Projectile[%s]"
-			(projectile-project-name)))))
+  (projectile-mode 1))
 
 (use-package ivy
   :ensure t
@@ -123,12 +81,13 @@
 
 (use-package flycheck
   :ensure t
-  :init (global-flycheck-mode))
+  :init (global-flycheck-mode)
+  :config (setq flycheck-emacs-lisp-load-path 'inherit))
 
 (use-package web-mode
   :ensure t
   :init
-  (load "~/.emacs.d/web-mode-setup"))
+  (require 'web-mode-setup))
 
 (use-package magit
   :ensure t
@@ -158,31 +117,11 @@
   :after treemacs magit
   :ensure t)
 
-(use-package doom-themes
-  :ensure t
-  :init
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t)
-  (load-theme 'doom-one t)
-  (doom-themes-treemacs-config))
-
-(use-package doom-modeline
-  :ensure t
-  :hook (after-init . doom-modeline-mode)
-  :init
-  (setq doom-modeline-major-mode-color-icon t)
-  (setq doom-modeline-github t))
-
 (use-package org
-  :ensure org-plus-contrib
+  ;;:ensure org-plus-contrib
   :config
-  (require 'ox-extra)
-  (ox-extras-activate '(ignore-headlines))
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((python . t)
-     (clojure . t)
-     (js . t)))
+  ;;(require 'ox-extra)
+  ;;(ox-extras-activate '(ignore-headlines))
   (setq org-src-fontify-natively t
 	org-src-tab-acts-natively t
 	org-src-preserve-indentation t
@@ -212,6 +151,45 @@
 
 (use-package org-bullets
   :ensure t
+  :after org
   :hook (org-mode . org-bullets-mode))
 
+(use-package restclient
+  :ensure t
+  :mode
+  ("\\.http\\'" . restclient-mode))
+
+;; (use-package restclient-test
+;;   :ensure t
+;;   :hook
+;;   (restclient-mode-hook . restclient-test-mode))
+
+;; (use-package ob-restclient
+;;   :ensure t
+;;   :after org restclient
+;;   :init
+;;   (org-babel-do-load-languages
+;;    'org-babel-load-languages
+;;    '((restclient . t))))
+
+(use-package company-restclient
+  :ensure t
+  :after (company restclient)
+  :init
+  (add-to-list 'company-backends 'company-restclient))
+
+(use-package ob-http
+  :ensure t
+  :after (org restclient))
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)
+   (clojure . t)
+   (js . t)
+   (http . t)))
+
 (treemacs)
+
+(provide 'packages-setup)
+;;; packages-setup.el ends here
