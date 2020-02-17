@@ -3,8 +3,7 @@
 ;;; Code:
 (require 'use-package)
 
-(use-package clojure-mode
-  :ensure t
+(use-package clojure-mode  :ensure t
   :config
   (put-clojure-indent 'fn-traced :defn))
 
@@ -13,11 +12,29 @@
   :init
   (add-hook 'clojure-mode-hook 'clj-refactor-mode))
 
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-reload-all) ;; Reload snippets when adding/changing snippets
+  (yas-global-mode))
+
+(use-package yasnippet-snippets
+  :ensure t)
+
 (use-package company
   :ensure t
   :init
   (add-hook 'after-init-hook 'global-company-mode)
   :config
+  
+  (defun my/company-to-yasnippet ()
+    (interactive)
+    (company-abort)
+    (call-interactively 'company-yasnippet))
+
+  (bind-key "<backtab>" 'my/company-to-yasnippet company-active-map)
+  (bind-key "<backtab>" 'company-yasnippet)
+  
   (setq company-tooltip-align-annotations t ; aligns annotation to the right
         company-tooltip-limit 12            ; bigger popup window
         company-idle-delay .2               ; decrease delay before autocompletion popup shows
@@ -84,10 +101,53 @@
   :init (global-flycheck-mode)
   :config (setq flycheck-emacs-lisp-load-path 'inherit))
 
+;; ;; Emacs 27 only
+;; (unless (version< emacs-version "27")
+;;   (use-package js-mode
+;;     :mode ("\\.jsx?$" . js-jsx-mode)))
+
+(use-package js2-mode
+  :ensure t
+  :config
+  ;; Flycheck provides these features, so disable them: conflicting with
+  ;; the eslint settings.
+  (setq js2-mode-show-parse-errors nil
+        js2-mode-show-strict-warnings nil
+        js2-strict-trailing-comma-warning nil
+        js2-strict-missing-semi-warning nil)
+  (setq js-switch-indent-offset 4))
+
 (use-package web-mode
   :ensure t
   :init
-  (require 'web-mode-setup))
+  (setq web-mode-engines-alist '(("ctemplate" . "\\.html\\'")))
+  (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode)))
+
+(use-package rjsx-mode
+  :ensure t
+  :mode ("\\.jsx?$" . rjsx-mode))
+
+(use-package tide
+  :ensure t
+  :after (rjsx-mode company flycheck)
+  :hook ((rjsx-mode . tide-setup)
+         (rjsx-mode . tide-hl-identifier-mode))
+  :config
+  (flycheck-add-mode 'javascript-tide 'rjsx-mode))
+
+;; (use-package lsp-mode
+;;   :ensure t
+;;   :hook ((web-mode . lsp)
+;; 	 (js-mode . lsp)
+;; 	 (js-jsx-mode . lsp))
+;;   :commands lsp
+;;   :config
+;;   (add-to-list 'lsp-language-id-configuration '(js-jsx-mode . "javascript")))
+
+;; (use-package company-lsp
+;;   :ensure t)
 
 (use-package magit
   :ensure t
@@ -107,7 +167,8 @@
   :ensure t
   :config
   (setq treemacs-width 30)
-  (treemacs-git-mode 'simple))
+  (treemacs-git-mode 'simple)
+  (add-hook 'emacs-startup-hook 'treemacs))
 
 (use-package treemacs-projectile
   :after treemacs projectile
@@ -117,11 +178,28 @@
   :after treemacs magit
   :ensure t)
 
+(use-package restclient
+  :ensure t
+  :mode
+  ("\\.http\\'" . restclient-mode))
+
+(use-package company-restclient
+  :ensure t
+  :after (company restclient)
+  :init
+  (add-to-list 'company-backends 'company-restclient))
+
+;; (use-package restclient-test
+;;   :ensure t
+;;   :hook
+;;   (restclient-mode-hook . restclient-test-mode))
+
 (use-package org
   ;;:ensure org-plus-contrib
   :config
   ;;(require 'ox-extra)
   ;;(ox-extras-activate '(ignore-headlines))
+  (require 'ob-clojure)
   (setq org-src-fontify-natively t
 	org-src-tab-acts-natively t
 	org-src-preserve-indentation t
@@ -145,6 +223,12 @@
 	org-pretty-entities t
 	org-hide-emphasis-markers t
 	org-babel-clojure-backend 'cider)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)
+     (clojure . t)
+     (js . t)
+     (http . t)))
   (add-hook 'org-babel-after-execute-hook #'org-redisplay-inline-images)
   (setq org-babel-js-function-wrapper "console.log(require('util').inspect(function(){\n%s\n}()));")
   (add-hook 'org-mode-hook #'auto-fill-mode))
@@ -154,16 +238,6 @@
   :after org
   :hook (org-mode . org-bullets-mode))
 
-(use-package restclient
-  :ensure t
-  :mode
-  ("\\.http\\'" . restclient-mode))
-
-;; (use-package restclient-test
-;;   :ensure t
-;;   :hook
-;;   (restclient-mode-hook . restclient-test-mode))
-
 ;; (use-package ob-restclient
 ;;   :ensure t
 ;;   :after org restclient
@@ -172,24 +246,9 @@
 ;;    'org-babel-load-languages
 ;;    '((restclient . t))))
 
-(use-package company-restclient
-  :ensure t
-  :after (company restclient)
-  :init
-  (add-to-list 'company-backends 'company-restclient))
-
 (use-package ob-http
   :ensure t
   :after (org restclient))
-
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((python . t)
-   (clojure . t)
-   (js . t)
-   (http . t)))
-
-(treemacs)
 
 (provide 'packages-setup)
 ;;; packages-setup.el ends here

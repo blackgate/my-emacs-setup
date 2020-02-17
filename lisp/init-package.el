@@ -5,10 +5,10 @@
 (require 'cl-lib)
 
 (setq package-archives
-      '(("GNU ELPA"     . "http://elpa.gnu.org/packages/")
+      '(("GNU ELPA"     . "https://elpa.gnu.org/packages/")
         ("MELPA Stable" . "https://stable.melpa.org/packages/")
         ("MELPA"        . "https://melpa.org/packages/")
-	("org"          . "http://orgmode.org/elpa/"))
+	("org"          . "https://orgmode.org/elpa/"))
       package-archive-priorities
       '(("MELPA Stable" . 10)
         ("GNU ELPA"     . 5)
