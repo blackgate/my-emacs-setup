@@ -8,11 +8,13 @@
 (prefer-coding-system 'utf-8)
 (setenv "LANG" "en_US.UTF-8")
 
+(setq-default indent-tabs-mode nil)
+
 ;; Environment
 (when (memq window-system '(mac ns x))
   (use-package exec-path-from-shell
     :ensure t
-    :init
+    :config
     (setq exec-path-from-shell-check-startup-files nil
           exec-path-from-shell-variables '("PATH" "MANPATH")
           exec-path-from-shell-arguments '("-l"))
@@ -44,15 +46,15 @@ This function is only necessary in window system."
   (delete-region (region-beginning) (region-end)))
 
 ;; macos only
-(if (and window-system (eq system-type 'darwin))
-    (progn
-      (isolate-kill-ring)
-      ;; bind CMD+C to pasteboard-copy
-      (global-set-key (kbd "s-c") 'pasteboard-copy)
-      ;; bind CMD+V to pasteboard-paste
-      (global-set-key (kbd "s-v") 'pasteboard-paste)
-      ;; bind CMD+X to pasteboard-cut
-      (global-set-key (kbd "s-x") 'pasteboard-cut)))
+;; (if (and window-system (eq system-type 'darwin))
+;;     (progn
+;;       (isolate-kill-ring)
+;;       ;; bind CMD+C to pasteboard-copy
+;;       (global-set-key (kbd "s-c") 'pasteboard-copy)
+;;       ;; bind CMD+V to pasteboard-paste
+;;       (global-set-key (kbd "s-v") 'pasteboard-paste)
+;;       ;; bind CMD+X to pasteboard-cut
+;;       (global-set-key (kbd "s-x") 'pasteboard-cut)))
 
 (setq mouse-drag-copy-region nil)
 (delete-selection-mode)
@@ -81,6 +83,8 @@ This function is only necessary in window system."
 
 ;; replace buffer-menu with ibuffer
 (global-set-key (kbd "C-x C-b") #'ibuffer)
+
+(setq frame-resize-pixelwise t)
 
 (provide 'defaults-setup)
 

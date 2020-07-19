@@ -12,4 +12,5 @@
 (require 'init-ui)
 (require 'packages-setup)
 
+(server-start)
 ;;; init.el ends here

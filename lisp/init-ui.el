@@ -17,7 +17,7 @@
 
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
-(setq-default line-spacing 3)
+(setq-default line-spacing 1)
 
 (defun font-candidate (&rest font-list)
   "Return existing font which first match in the FONT-LIST."
@@ -54,6 +54,13 @@
    '("google[ _-]drive" all-the-icons-alltheicon "google-drive" :height 0.9 :v-adjust -0.1)))
 
 (when window-system (set-frame-size (selected-frame) 120 40))
+
+(defun xwidget-webkit-dark-mode ()
+  "Turn dark mode on."
+  (interactive)
+  (xwidget-webkit-execute-script
+   (xwidget-webkit-current-session)
+   "document.body.style.cssText = 'filter: invert(1); background: #222;'"))
 
 (provide 'init-ui)
 ;;; init-ui.el ends here
