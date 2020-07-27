@@ -273,20 +273,7 @@
   ;; (add-hook 'org-mode-hook #'auto-fill-mode)
   (add-hook 'org-mode-hook #'visual-line-mode)
   (add-hook 'org-mode-hook #'org-setup-<>-syntax-fix)
-  (add-hook 'org-mode-hook #'variable-pitch-mode)
-  (custom-theme-set-faces
-   'user
-   '(org-block ((t (:inherit fixed-pitch))))
-   '(org-block-begin-line ((t (:inherit (shadow fixed-pitch) :background "#1A1E25"))))
-   '(org-code ((t (:inherit (shadow fixed-pitch)))))
-   '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
-   '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
-   '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-   '(org-property-value ((t (:inherit fixed-pitch))) t)
-   '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-   '(org-table ((t (:inherit fixed-pitch))))
-   '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
-   '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
+  (set-face-background 'org-block-begin-line "#1A1E25")
   (set-face-attribute 'org-link nil :weight 'medium)
   (require 'org-protocol))
 

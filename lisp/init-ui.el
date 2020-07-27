@@ -26,9 +26,7 @@
 (let ((f (font-candidate "SF Mono 13" "Fira Code 13" "Consolas 12" "Monospace 12")))
   (when f
     (add-to-list 'default-frame-alist `(font . ,f))
-    (set-face-attribute 'default nil :font f)
-    (set-face-attribute 'fixed-pitch nil :font f)
-    (set-face-attribute 'variable-pitch nil :family "Arial" :height 140)))
+    (set-face-attribute 'default nil :font f)))
 
 (use-package doom-themes
   :ensure t
