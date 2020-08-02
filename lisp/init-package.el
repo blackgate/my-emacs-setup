@@ -21,22 +21,6 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-;; (defvar my-packages
-;;   '(use-package
-;;     exec-path-from-shell))
-
-;; (defun prelude-packages-installed-p ()
-;;   (cl-loop
-;;    for p in my-packages
-;;    when (not (package-installed-p p)) do (cl-return nil)
-;;    finally (cl-return t)))
-
-;; (unless (prelude-packages-installed-p)
-;;   (package-refresh-contents)
-;;   (dolist (p my-packages)
-;;     (unless (package-installed-p p)
-;;       (package-install p))))
-
 (provide 'init-package)
 
 ;;; init-package.el ends here

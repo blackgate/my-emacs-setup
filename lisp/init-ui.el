@@ -55,12 +55,5 @@
 
 (when window-system (set-frame-size (selected-frame) 120 40))
 
-(defun xwidget-webkit-dark-mode ()
-  "Turn dark mode on."
-  (interactive)
-  (xwidget-webkit-execute-script
-   (xwidget-webkit-current-session)
-   "document.body.style.cssText = 'filter: invert(1); background: #222;'"))
-
 (provide 'init-ui)
 ;;; init-ui.el ends here

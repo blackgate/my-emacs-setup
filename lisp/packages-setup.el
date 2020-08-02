@@ -26,6 +26,7 @@
 
 (use-package company
   :ensure t
+  :defines company-dabbrev-ignore-case company-dabbrev-downcase
   :init
   (add-hook 'after-init-hook 'global-company-mode)
   :config
@@ -110,11 +111,6 @@
   :init (global-flycheck-mode)
   :config (setq flycheck-emacs-lisp-load-path 'inherit))
 
-;; ;; Emacs 27 only
-;; (unless (version< emacs-version "27")
-;;   (use-package js-mode
-;;     :mode ("\\.jsx?$" . js-jsx-mode)))
-
 (use-package js2-mode
   :ensure t
   :defer t
@@ -173,10 +169,18 @@
 
 (use-package treemacs
   :ensure t
+  :defer t
+  :init
+  (add-hook 'emacs-startup-hook 'treemacs)
   :config
+  (advice-add 'treemacs-mode :after
+              (lambda ()
+                (interactive)
+                (with-current-buffer (treemacs-get-local-buffer)
+                  (setq-local face-remapping-alist
+                              '((default . (:background "#20232A")))))))
   (setq treemacs-width 30)
-  (treemacs-git-mode 'simple)
-  (add-hook 'emacs-startup-hook 'treemacs))
+  (treemacs-git-mode 'simple))
 
 (use-package treemacs-projectile
   :after treemacs projectile
@@ -224,6 +228,7 @@
             ;; This is a < or > in an org-src block
             (put-text-property (point) (1- (point))
                                'syntax-table (string-to-syntax "_"))))))))
+
 (defun org-setup-<>-syntax-fix ()
   "Setup for characters ?< and ?> in source code blocks.  Add this function to `org-mode-hook'."
   (setq syntax-propertize-function 'org-mode-<>-syntax-fix)
@@ -232,6 +237,12 @@
 (use-package org
   ;;:ensure org-plus-contrib
   :defer t
+  :defines
+  org-display-inline-images
+  org-redisplay-inline-images
+  org-hide-leading-stars-before-indent-mode
+  org-babel-clojure-backend
+  org-babel-js-function-wrapper
   :config
   ;;(require 'ox-extra)
   ;;(ox-extras-activate '(ignore-headlines))
@@ -259,7 +270,8 @@
 	org-image-actual-width nil
 	org-pretty-entities t
 	org-hide-emphasis-markers t
-	org-babel-clojure-backend 'cider)
+	org-babel-clojure-backend 'cider
+        org-babel-js-function-wrapper "console.log(require('util').inspect(function(){\n%s\n}()));")
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((python . t)
@@ -269,11 +281,12 @@
      (scheme . t)
      (dot . t)))
   (add-hook 'org-babel-after-execute-hook #'org-redisplay-inline-images)
-  (setq org-babel-js-function-wrapper "console.log(require('util').inspect(function(){\n%s\n}()));")
-  ;; (add-hook 'org-mode-hook #'auto-fill-mode)
   (add-hook 'org-mode-hook #'visual-line-mode)
   (add-hook 'org-mode-hook #'org-setup-<>-syntax-fix)
-  (set-face-background 'org-block-begin-line "#1A1E25")
+  (set-face-background 'org-block-begin-line nil)
+  (set-face-attribute 'org-block-begin-line nil :underline t :overline nil)
+  (set-face-attribute 'org-block-end-line nil :underline nil :overline t)
+  (set-face-attribute 'org-document-title nil :height 180)
   (set-face-attribute 'org-link nil :weight 'medium)
   (require 'org-protocol))
 
@@ -291,6 +304,7 @@
 (use-package geiser
   :ensure t
   :defer t
+  :defines geiser-default-implementation
   :hook (scheme-mode . geiser-mode)
   :config
   (setq geiser-default-implementation 'racket))
@@ -338,9 +352,9 @@
         org-roam-server-port 8090
         org-roam-server-export-inline-images t
         org-roam-server-authenticate nil
-        org-roam-server-label-truncate t
-        org-roam-server-label-truncate-length 60
-        org-roam-server-label-wrap-length 20))
+        org-roam-server-network-label-truncate t
+        org-roam-server-network-label-truncate-length 60
+        org-roam-server-network-label-wrap-length 20))
 
 (use-package deft
   :ensure t
@@ -358,6 +372,16 @@
   :ensure t
   :defer t
   :after ox)
+
+(use-package xwidget
+  :defer t
+  :config
+  (defun xwidget-webkit-dark-mode ()
+    "Turn dark mode on."
+    (interactive)
+    (xwidget-webkit-execute-script
+     (xwidget-webkit-current-session)
+     "document.body.style.cssText = 'filter: invert(1); background: #222;'")))
 
 (provide 'packages-setup)
 ;;; packages-setup.el ends here

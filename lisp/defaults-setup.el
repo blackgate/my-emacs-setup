@@ -45,17 +45,6 @@ This function is only necessary in window system."
   (pasteboard-copy)
   (delete-region (region-beginning) (region-end)))
 
-;; macos only
-;; (if (and window-system (eq system-type 'darwin))
-;;     (progn
-;;       (isolate-kill-ring)
-;;       ;; bind CMD+C to pasteboard-copy
-;;       (global-set-key (kbd "s-c") 'pasteboard-copy)
-;;       ;; bind CMD+V to pasteboard-paste
-;;       (global-set-key (kbd "s-v") 'pasteboard-paste)
-;;       ;; bind CMD+X to pasteboard-cut
-;;       (global-set-key (kbd "s-x") 'pasteboard-cut)))
-
 (setq mouse-drag-copy-region nil)
 (delete-selection-mode)
 
