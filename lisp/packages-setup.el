@@ -280,6 +280,11 @@
      (http . t)
      (scheme . t)
      (dot . t)))
+  (defun org/set-margins ()
+    "Set margins in current buffer."
+    (setq left-margin-width 2)
+    (setq right-margin-width 2))
+  (add-hook 'org-mode-hook 'org/set-margins)
   (add-hook 'org-babel-after-execute-hook #'org-redisplay-inline-images)
   (add-hook 'org-mode-hook #'visual-line-mode)
   (add-hook 'org-mode-hook #'org-setup-<>-syntax-fix)
