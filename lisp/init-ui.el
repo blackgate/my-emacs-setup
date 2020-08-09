@@ -28,6 +28,9 @@
     (add-to-list 'default-frame-alist `(font . ,f))
     (set-face-attribute 'default nil :font f)))
 
+;; Chnages the symbol a line is truncated
+(set-display-table-slot standard-display-table 'truncation (make-glyph-code ?…))
+
 (use-package doom-themes
   :ensure t
   :init
